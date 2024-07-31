@@ -8,12 +8,13 @@ import ViewNews from "./pages/ViewNews";
 import Gallery from "./pages/Gallery";
 import Resources from "./pages/Resources";
 import PendingMembership from "./pages/PendingMembership";
+import ProtectedRoutes from "./layouts/ProtectedRoutes";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<DashboardLayout />}>
+        <Route path="/" element={<ProtectedRoutes />}>
           <Route index element={<Dashboard />} />
           <Route path="create-news" element={<CreateNews />} />
           <Route path="view-news" element={<ViewNews />} />

@@ -7,6 +7,7 @@ import { SwipeableDrawer } from "@mui/material";
 interface DashboardLayoutProps {}
 const DashboardLayout: FC<DashboardLayoutProps> = () => {
   const [openMobileSidebar, setOpenMobileSidebar] = useState(false);
+
   return (
     <div>
       <div className="flex w-full">
