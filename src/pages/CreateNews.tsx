@@ -6,18 +6,27 @@ import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { Formik, Form, FormikHelpers } from "formik";
 import { toast } from "@/components/ui/use-toast";
-import { CloudUpload } from "lucide-react";
+import { ArrowLeft, CloudUpload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/lib/redux/store";
+import { createNewsPost } from "@/lib/redux/slices/news/newsThunk";
+import { AxiosError } from "axios";
 
 interface CreateNewsProps {}
 const CreateNews: FC<CreateNewsProps> = () => {
   const [loading, setLoading] = useState(false);
   const formValidationSchema = Yup.object().shape({
-    title: Yup.string().required("Blog Title is Required"),
-    imageDoc: Yup.mixed().required("Blog Image is required"),
+    title: Yup.string().required("News Post Title is Required"),
+    imageDoc: Yup.mixed().required("News Post Image is required"),
     description: Yup.mixed().required("Contest Description is Required"),
   });
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const submitForm = async (
     values: {
@@ -36,19 +45,39 @@ const CreateNews: FC<CreateNewsProps> = () => {
     const formData = new FormData();
     formData.append("title", values?.title);
     formData.append("body", values?.description);
-    formData.append("image", values?.imageDoc);
+    values.imageDoc && formData.append("image", values.imageDoc);
 
     try {
       setLoading(true);
 
+      const res = await dispatch(createNewsPost(formData));
+
+      if (res.type.includes("rejected"))
+        return toast({
+          title: "An Error Occurred",
+          description: res.payload as string,
+          variant: "destructive",
+        });
+
       toast({
-        title: "Blog created Successfully",
+        title: "News Post created Successfully",
       });
 
       actions.resetForm();
     } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 400 || error.response?.status === 401) {
+          return toast({
+            title: "Error Creating Post",
+            description: error.response?.data,
+            variant: "destructive",
+          });
+        }
+      }
+
       toast({
-        title: "Blog created Successfully",
+        title: "Error Creating Post",
+        description: "Something went wrong",
         variant: "destructive",
       });
     } finally {
@@ -58,8 +87,15 @@ const CreateNews: FC<CreateNewsProps> = () => {
 
   return (
     <div className="md:p-8 flex flex-col gap-12">
-      <h4 className="text-black text-xl font-semibold">Create News</h4>
-
+      <Button className="w-fit" onClick={() => navigate(-1)} variant={"ghost"}>
+        <ArrowLeft />
+      </Button>
+      <div className="space-y-6">
+        <h4 className="text-black text-xl font-semibold">Create News</h4>
+        <p className="text-base text-slate-500">
+          Please Supply All Details to Create News Post
+        </p>
+      </div>
       <div className="flex items-center ">
         <motion.div
           initial={{ y: 100, opacity: 0 }}
@@ -82,7 +118,7 @@ const CreateNews: FC<CreateNewsProps> = () => {
                 enableReinitialize={true}
                 onSubmit={(values, actions) => {
                   // window.scrollTo(0, 0)
-                  console.log(values, "often");
+
                   submitForm(values, actions);
                 }}
               >
@@ -107,7 +143,7 @@ const CreateNews: FC<CreateNewsProps> = () => {
                         </label>
                         <Input
                           name="title"
-                          placeholder="Blog Title"
+                          placeholder="News Post Title"
                           type="text"
                           value={values.title}
                           onChange={handleChange}
@@ -119,12 +155,12 @@ const CreateNews: FC<CreateNewsProps> = () => {
 
                       <div className="flex flex-col xs:mt-4 lg:mt-0 ">
                         {values?.imageDoc ? (
-                          <div className="pt-0 ">
+                          <div className="pt-0 w-[300px] overflow-hidden ">
                             <img
                               alt="upload"
                               width={"300px"}
                               height={"100px"}
-                              //   src={URL.createObjectURL(values?.imageDoc)}
+                              src={values?.imageDoc}
                             />
                           </div>
                         ) : (
@@ -141,13 +177,18 @@ const CreateNews: FC<CreateNewsProps> = () => {
                             <input
                               type="file"
                               name="imageDoc"
-                              value={values?.imageDoc}
+                              value={values.imageDoc ? values.imageDoc : ""}
                               className="opacity-0"
                               onChange={(e) => {
-                                setFieldValue(
-                                  "imageDoc",
-                                  e.target.files && e.target.files[0]
-                                );
+                                const file =
+                                  e.target.files && e.target.files[0];
+                                if (file) {
+                                  const reader = new FileReader();
+                                  reader.onloadend = () => {
+                                    setFieldValue("imageDoc", reader.result);
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
                               }}
                               id="upload"
                               accept={"image/*"}
@@ -176,23 +217,14 @@ const CreateNews: FC<CreateNewsProps> = () => {
                           formats={formats}
                           style={{
                             backgroundColor: "#fff",
-                            minHeight: "193px",
+                            minHeight: "500px",
                             border: "1px solid #ccc",
                             borderRadius: "4px",
                             padding: "10px",
                           }}
                           className=" h-[193px] mt-1.5 outline-none"
                         />
-                        {/* <textarea
-                                        name="description"
-                                        placeholder="Blog Description"
-                                        type="text"
-                                        rows="5"
-                                        className="lg:w-[507px] rounded  h-[193px]  bg-white border border-solid mt-1.5 p-3 outline-none"                               
-                                        value={values.description}
-                                        onChange={handleChange}
-                                    >
-                                    </textarea> */}
+
                         {errors.description && touched.description ? (
                           <div className="text-RED-_100">
                             {errors.description}

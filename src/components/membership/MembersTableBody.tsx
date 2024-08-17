@@ -1,6 +1,6 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
-import { Eye, Info, Pencil } from "lucide-react";
+import { Eye, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,7 +10,6 @@ import UserAvatar from "../shared/atoms/UserAvatar";
 import { TableBody, TableCell, TableRow } from "../ui/table";
 import { IMembership } from "@/types/membership";
 import { AppDispatch, RootState } from "@/lib/redux/store";
-import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { openModal } from "@/lib/redux/slices/dialogSlice";
 import CustomBadge from "../shared/atoms/CustomBadge";
 import CustomLoader from "../shared/atoms/CustomLoader";
@@ -25,15 +24,11 @@ const MembersTableBody: FC<MembersTableBodyProps> = ({ memberList }) => {
 
   const [membersData, setMembersData] = useState<IMembership[] | null>(null);
 
-  const ref = useRef(null);
-
   const { isLoading } = useSelector(
     (store: RootState) => store.membershipManagement
   );
 
   const dispatch = useDispatch<AppDispatch>();
-
-  useOnClickOutside(ref, () => setSelectedUserId(null));
 
   const navigate = useNavigate();
 
@@ -59,19 +54,11 @@ const MembersTableBody: FC<MembersTableBodyProps> = ({ memberList }) => {
 
   const userTableOptns = [
     {
-      id: "1",
-      icon: <Pencil />,
-      text: "Edit",
-      btnOnclick: function (userId: number) {
-        navigate(`${userId}/edit`);
-      },
-    },
-    {
       id: "2",
       icon: <Eye />,
       text: "View",
       btnOnclick: function (userId: number) {
-        navigate(`${userId}`);
+        navigate(`/members/${userId}`);
       },
     },
     {
@@ -132,7 +119,6 @@ const MembersTableBody: FC<MembersTableBodyProps> = ({ memberList }) => {
                 {member.created_at && format(member.created_at, "dd/LL/yyyy")}
               </span>
               <span className="text-[#999999]">
-                {" "}
                 {member.created_at && format(member.created_at, "hh:mm aaa")}
               </span>
             </TableCell>
@@ -141,12 +127,13 @@ const MembersTableBody: FC<MembersTableBodyProps> = ({ memberList }) => {
               <CustomBadge status={member.status} />
             </TableCell>
             <TableCell className="relative">
-              <div ref={ref}>
+              <div>
                 <OptsDropdown
                   options={userTableOptns}
                   selectedId={selectedUserId}
                   status={member.status}
                   onClick={() => {
+                    console.log(member, "member");
                     setSelectedUserId(member.id);
                     dispatch(setSelectedMember(membersData[index]));
                   }}

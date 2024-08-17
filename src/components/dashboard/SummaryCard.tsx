@@ -59,7 +59,7 @@ const SummaryCard: FC<SummaryCardProps> = ({
         <div className="text-white">{icon}</div>
       </div>
       <div className="flex flex-col gap-4 text-start">
-        {value ? (
+        {value != undefined || value != null  ? (
           <h5 className="text-[2rem] font-medium ">{value}</h5>
         ) : (
           <CustomLoader width={16} height={16} padding="p-0" />

@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/popover";
 import { cn, UserStatus } from "@/lib/utils";
 import { EllipsisVertical } from "lucide-react";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useState } from "react";
 
 interface OptsDropdownProps {
   options: {
@@ -25,49 +25,36 @@ const OptsDropdown: FC<OptsDropdownProps> = ({
   selectedId,
   onClick,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button onClick={onClick} variant={"ghost"}>
           <EllipsisVertical />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex flex-col gap-4 rounded-3xl p-4">
-        {selectedId &&
-          options.map(function (optn, index) {
-            if (optn.text === "Enable" || optn.text === "Disable") {
-              if (
-                (status === 1 && optn.text === "Disable") ||
-                (status === 0 && optn.text === "Enable")
-              ) {
-                return (
-                  <Button
-                    variant={"ghost"}
-                    key={index}
-                    onClick={() => optn.btnOnclick(selectedId)}
-                    className={cn(
-                      "flex gap-4 items-center justify-start w-full",
-                      optn.text.startsWith("Enable")
-                        ? "text-[#229745]"
-                        : optn.text === "Disable"
-                        ? "text-[#E61919]"
-                        : "text-[#33363F]"
-                    )}
-                  >
-                    {optn.icon}
-                    {optn.text}
-                  </Button>
-                );
-              }
-            } else {
+        {options.map(function (optn, index) {
+          if (optn.text === "Enable" || optn.text === "Disable") {
+            if (
+              (status === 1 && optn.text === "Disable") ||
+              (status === 0 && optn.text === "Enable")
+            ) {
               return (
                 <Button
                   variant={"ghost"}
                   key={index}
-                  onClick={() => optn.btnOnclick(selectedId)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    selectedId && optn.btnOnclick(selectedId);
+                  }}
                   className={cn(
                     "flex gap-4 items-center justify-start w-full",
-                    optn.text === "Delete" ? "text-[#E61919]" : "text-[#33363F]"
+                    optn.text.startsWith("Enable")
+                      ? "text-[#229745]"
+                      : optn.text === "Disable"
+                      ? "text-[#E61919]"
+                      : "text-[#33363F]"
                   )}
                 >
                   {optn.icon}
@@ -75,9 +62,28 @@ const OptsDropdown: FC<OptsDropdownProps> = ({
                 </Button>
               );
             }
+          } else {
+            return (
+              <Button
+                variant={"ghost"}
+                key={index}
+                onClick={() => {
+                  setIsOpen(false);
+                  selectedId && optn.btnOnclick(selectedId);
+                }}
+                className={cn(
+                  "flex gap-4 items-center justify-start w-full",
+                  optn.text === "Delete" ? "text-[#E61919]" : "text-[#33363F]"
+                )}
+              >
+                {optn.icon}
+                {optn.text}
+              </Button>
+            );
+          }
 
-            return null;
-          })}
+          return null;
+        })}
       </PopoverContent>
     </Popover>
   );

@@ -1,17 +1,9 @@
 import { UserPaymenrStatus, UserStatus } from "@/lib/utils";
+import { IGrade } from "./grade";
 
 export interface IQalification {
   qualification_name: string;
-  qualification_image: string;
-}
-
-export interface IGrade {
-  id: number;
-  name: string;
-  amount: number;
-  desc: string;
-  created_at: string;
-  updated_at: string;
+  qualification_image: string | null;
 }
 
 export interface IMembership {
@@ -45,17 +37,14 @@ export interface IMembership {
   is_primary_function: number;
 
   is_member: number;
-
-  grade_id: string;
-  curernt_grade_date: string;
-  dob: string;
-  status: UserStatus;
-  payment_link?: string;
-  practice_id: string;
-  pic: string;
+  pic: "";
   yearly_dues: UserPaymenrStatus;
-
-  qualifications: IQalification[];
+  payment_link: string | null;
+  grade_id: string;
+  curernt_grade_date: Date | null;
+  dob: Date | null;
   grade: IGrade;
+  qualifications: IQalification[];
   created_at: string;
+  status: UserStatus;
 }

@@ -1,6 +1,11 @@
 import MembersTableBody from "@/components/membership/MembersTableBody";
+import ConfirmationDialog from "@/components/shared/molecules/ConfirmationDialog";
 import CustomTable from "@/components/shared/molecules/CustomTable";
-import { fetchAllPendingMembers } from "@/lib/redux/slices/membershipManagement/membersManagementThunk";
+import { toast } from "@/components/ui/use-toast";
+import {
+  approveMembership,
+  fetchAllPendingMembers,
+} from "@/lib/redux/slices/membershipManagement/membersManagementThunk";
 import { AppDispatch, RootState } from "@/lib/redux/store";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,9 +18,10 @@ const PendingMembership: FC<PendingMembershipProps> = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const { pendingMembers } = useSelector(
+  const { pendingMembers, selectedMember } = useSelector(
     (store: RootState) => store.membershipManagement
   );
+  const { isOpen } = useSelector((store: RootState) => store.dialog);
 
   useEffect(() => {
     const getData = async () => {
@@ -29,8 +35,6 @@ const PendingMembership: FC<PendingMembershipProps> = () => {
     getData();
   }, [dispatch]);
 
-  useEffect(() => {}, []);
-
   //   useEffect(() => {
   //     setSkip((currentPage - 1) * limit);
   //   }, [currentPage, limit]);
@@ -40,8 +44,26 @@ const PendingMembership: FC<PendingMembershipProps> = () => {
     setCurrentPage(value);
   };
 
+  const confirmModal = async () => {
+    try {
+      if (!selectedMember) return;
+      await dispatch(approveMembership(selectedMember.id));
+
+      await dispatch(fetchAllPendingMembers());
+
+      toast({
+        title: "Users Application has been approved",
+      });
+    } catch (error) {
+      toast({
+        title: "Something Went Wrong",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
-    <div>
+    <div className="p-4">
       <CustomTable
         tableBody={<MembersTableBody memberList={pendingMembers} />}
         headingList={membershipTableHeading}
@@ -49,6 +71,7 @@ const PendingMembership: FC<PendingMembershipProps> = () => {
         currentPage={currentPage}
         handlePaginationChange={handlePaginationChange}
       />
+      {isOpen && <ConfirmationDialog confirmModal={confirmModal} />}
     </div>
   );
 };

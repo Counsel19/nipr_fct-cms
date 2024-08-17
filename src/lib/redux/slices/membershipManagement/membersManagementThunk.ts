@@ -97,13 +97,28 @@ export const fetchAllInactiveMembers = createAppAsyncThunk(
 );
 export const approveMembership = createAppAsyncThunk(
   "membersManagement/approveMembership",
-  async (memberId: string, thunkAPI) => {
+  async (memberId: number, thunkAPI) => {
     try {
-      const res = await axiosInstance.get(
+      const res = await axiosInstance.post(
         `user/members/application/approve/${memberId}`
       );
 
       return res.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return thunkAPI.rejectWithValue(error.response?.data?.message);
+      }
+      return thunkAPI.rejectWithValue("Could Fetch all InActive Members");
+    }
+  }
+);
+export const fetchMemberById = createAppAsyncThunk(
+  "membersManagement/fetchMemberById",
+  async (memberId: number, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get(`user/${memberId}`);
+
+      return res.data.data.user[0];
     } catch (error) {
       if (error instanceof AxiosError) {
         return thunkAPI.rejectWithValue(error.response?.data?.message);

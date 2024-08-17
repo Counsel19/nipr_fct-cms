@@ -13,3 +13,12 @@ export enum UserPaymenrStatus {
   inactive,
   active,
 }
+
+export enum EventType {
+  free = "free",
+  paid = "paid",
+}
+export enum GalleryItemType {
+  image = "image",
+  video = "video",
+}

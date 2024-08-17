@@ -106,6 +106,7 @@ const Login: FC<LoginProps> = () => {
             <LabledInput
               label="Password"
               name="password"
+              type="password"
               value={inputValue.password}
               setInputValue={handleOnchange}
             />

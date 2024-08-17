@@ -1,10 +1,15 @@
 import {
+  Banknote,
   CalendarCog,
+  CircleCheck,
+  Clock8,
   Files,
   Home,
   Images,
   Power,
   Rss,
+  ShieldCheck,
+  ShieldQuestion,
   User,
 } from "lucide-react";
 import { FC } from "react";
@@ -42,28 +47,41 @@ const SideBar: FC<SideBarProps> = () => {
           title: "Pending",
           itemId: "/pending-members",
 
-          elemBefore: () => <User size={20} />,
+          elemBefore: () => <Clock8 size={20} />,
         },
         {
           title: "Approved",
           itemId: "/approved-members",
 
-          elemBefore: () => <User size={20} />,
+          elemBefore: () => <CircleCheck size={20} />,
+        },
+        {
+          title: "Paid",
+          itemId: "/paid-members",
+
+          elemBefore: () => <Banknote size={20} />,
+        },
+        {
+          title: "Active",
+          itemId: "/active-members",
+
+          elemBefore: () => <ShieldCheck size={20} />,
+        },
+        {
+          title: "Inactive",
+          itemId: "/inactive-members",
+
+          elemBefore: () => <ShieldQuestion size={20} />,
         },
       ],
     },
     {
       title: "View News",
       children: false,
-      itemId: "/view-news",
+      itemId: "/news",
       icon: () => <Rss size={20} />,
     },
-    {
-      title: "Create News",
-      children: false,
-      itemId: "/create-news",
-      icon: () => <Rss size={20} />,
-    },
+
     {
       title: "Gallery",
       children: false,

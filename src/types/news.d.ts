@@ -7,3 +7,9 @@ export interface INews {
   created_at: string;
   updated_at: string;
 }
+
+export interface IAddNews {
+  post_id: number;
+  title: string;
+  body: string;
+}

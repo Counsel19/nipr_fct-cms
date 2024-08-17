@@ -15,7 +15,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = () => {
           <SideBar />
         </div>
         <div className="lg:w-[80%] h-full">
-          <header className="sticky top-0 border-none h-[76px] z-50 bg-[#fff] xl:px-6 lg:px-4 md:px-2 px-2">
+          <header className="sticky top-0 border-none h-[76px] z-20 bg-[#fff] xl:px-6 lg:px-4 md:px-2 px-2">
             <Header setOpenMobileSidebar={setOpenMobileSidebar} />
           </header>
           <main className="h-auto bg-[#F8F8F8] ">

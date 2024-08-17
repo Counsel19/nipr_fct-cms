@@ -5,6 +5,7 @@ import {
   fetchAllPaidMembers,
   fetchAllActiveMembers,
   fetchAllInactiveMembers,
+  fetchMemberById,
 } from "./membersManagementThunk";
 import { IMembership } from "@/types/membership";
 
@@ -48,6 +49,18 @@ const membersManagementSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchMemberById.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchMemberById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.selectedMember = action.payload;
+      })
+      .addCase(fetchMemberById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || "";
+      })
+
       .addCase(fetchAllApprovedMembers.pending, (state) => {
         state.isLoading = true;
       })
@@ -59,6 +72,8 @@ const membersManagementSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload || "";
       })
+
+      
       .addCase(fetchAllPendingMembers.pending, (state) => {
         state.isLoading = true;
       })
@@ -82,6 +97,7 @@ const membersManagementSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload || "";
       })
+
       .addCase(fetchAllPaidMembers.pending, (state) => {
         state.isLoading = true;
       })
@@ -93,6 +109,8 @@ const membersManagementSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload || "";
       })
+
+
       .addCase(fetchAllInactiveMembers.pending, (state) => {
         state.isLoading = true;
       })

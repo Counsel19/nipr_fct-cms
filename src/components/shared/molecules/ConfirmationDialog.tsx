@@ -29,8 +29,7 @@ const ConfirmationDialog: FC<ConfirmationDialogProps> = ({ confirmModal }) => {
       console.log(error);
 
       return toast({
-        title: "Error Toggle User Status",
-        description: "Unable to toggle user status! Try again latter",
+        title: "Could not perfrom Request ",
         variant: "destructive",
       });
     } finally {
@@ -40,7 +39,7 @@ const ConfirmationDialog: FC<ConfirmationDialogProps> = ({ confirmModal }) => {
 
   return (
     <div
-      className="relative z-10"
+      className="relative z-50"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -57,9 +56,9 @@ const ConfirmationDialog: FC<ConfirmationDialogProps> = ({ confirmModal }) => {
                 {dialogInfo?.icon}
               </div>
               <div className="flex items-start mb-3">
-                <div className="mt-3">
+                <div className="mt-3 space-y-6">
                   <h3
-                    className="text-xl font-semibold leading-6 text-gray-900"
+                    className="text-xl leading-[2rem] font-semibold  text-gray-900"
                     id="modal-title"
                   >
                     {dialogInfo?.title}
@@ -72,7 +71,7 @@ const ConfirmationDialog: FC<ConfirmationDialogProps> = ({ confirmModal }) => {
                 </div>
               </div>
             </div>
-            <div className="bg-gray-50 flex justify-around gap-8">
+            <div className="bg-gray-50 flex mt-6 justify-around gap-8">
               <Button
                 onClick={handleCloseModel}
                 variant={"outline"}

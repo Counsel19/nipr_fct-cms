@@ -6,10 +6,11 @@ interface LabledInputProps {
   label: string;
   placeholder?: string;
   isTextArea?: boolean;
+  type?: string
   name: string;
   value: string;
   className?: string;
-  setInputValue: (
+  setInputValue?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
 }
@@ -17,6 +18,7 @@ const LabledInput: FC<LabledInputProps> = ({
   label,
   name,
   value,
+  type = "text",
   placeholder,
   isTextArea,
   className,
@@ -42,6 +44,7 @@ const LabledInput: FC<LabledInputProps> = ({
         <Input
           name={name}
           value={value}
+          type={type}
           onChange={setInputValue}
           className={className}
           placeholder={placeholder || `Enter your ${label}`}
