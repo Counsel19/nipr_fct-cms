@@ -28,7 +28,11 @@ const initialState: newsSliceState = {
 const newsSlice = createSlice({
   name: "news",
   initialState,
-  reducers: {},
+  reducers: {
+    selectNewsPost: (state, action) => {
+      state.singleNewsPost = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllNewsPost.pending, (state) => {
@@ -101,6 +105,6 @@ const newsSlice = createSlice({
   },
 });
 
-// export const {} = newsSlice.actions;
+export const { selectNewsPost } = newsSlice.actions;
 
 export default newsSlice.reducer;

@@ -10,7 +10,7 @@ import {
 } from "./eventsThunk";
 import { IEvent, IEventWithAttendace } from "@/types/event";
 
-interface gradeSliceState {
+interface eventSliceState {
   isLoading: boolean;
   allEvents: IEvent[] | null;
   allEventsWithAttendace: IEventWithAttendace[] | null;
@@ -20,7 +20,7 @@ interface gradeSliceState {
 
 // type UserProfileKeys = keyof UserProfile;
 
-const initialState: gradeSliceState = {
+const initialState: eventSliceState = {
   isLoading: false,
   allEvents: null,
   singleEvent: null,
@@ -28,10 +28,14 @@ const initialState: gradeSliceState = {
   error: "",
 };
 
-const gradeSlice = createSlice({
+const eventSlice = createSlice({
   name: "grade",
   initialState,
-  reducers: {},
+  reducers: {
+    selectEvent: (state, action) => {
+      state.singleEvent = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllEvents.pending, (state) => {
@@ -116,6 +120,6 @@ const gradeSlice = createSlice({
   },
 });
 
-// export const {} = gradeSlice.actions;
+export const { selectEvent } = eventSlice.actions;
 
-export default gradeSlice.reducer;
+export default eventSlice.reducer;

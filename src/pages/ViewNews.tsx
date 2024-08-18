@@ -1,9 +1,12 @@
 import NewsTableBody from "@/components/newsPost/NewsTableBody";
+import ConfirmationDialog from "@/components/shared/molecules/ConfirmationDialog";
 import CustomTable from "@/components/shared/molecules/CustomTable";
 import { buttonVariants } from "@/components/ui/button";
-import { fetchAllNewsPost } from "@/lib/redux/slices/news/newsThunk";
+import { toast } from "@/components/ui/use-toast";
+import { deleteNewsPost, fetchAllNewsPost } from "@/lib/redux/slices/news/newsThunk";
 import { AppDispatch, RootState } from "@/lib/redux/store";
 import { cn } from "@/lib/utils";
+import { AxiosError } from "axios";
 import { Plus } from "lucide-react";
 
 import { ChangeEvent, FC, useEffect, useState } from "react";
@@ -12,8 +15,9 @@ import { Link } from "react-router-dom";
 
 interface ViewNewsProps {}
 const ViewNews: FC<ViewNewsProps> = () => {
-  const { allNewsPost } = useSelector((store: RootState) => store.newsPost);
+  const { allNewsPost, singleNewsPost } = useSelector((store: RootState) => store.newsPost);
   const [currentPage, setCurrentPage] = useState(1);
+  const { isOpen } = useSelector((store: RootState) => store.dialog);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -34,6 +38,39 @@ const ViewNews: FC<ViewNewsProps> = () => {
     setCurrentPage(value);
   };
 
+  
+  const confirmModal = async () => {
+    if (!singleNewsPost) return;
+    try {
+      const res = await dispatch(deleteNewsPost(singleNewsPost.id));
+
+      if (res.type.includes("rejected"))
+        return toast({
+          title: "An Error Occurred",
+          description: res.payload as string,
+          variant: "destructive",
+        });
+
+      await dispatch(fetchAllNewsPost());
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 400 || error.response?.status === 401) {
+          return toast({
+            title: "Error Deleting News Post",
+            description: error.response?.data,
+            variant: "destructive",
+          });
+        }
+      }
+
+      toast({
+        title: "Error Deleting News Post",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="p-8 space-y-20">
       <div className="flex justify-between items-center">
@@ -51,6 +88,7 @@ const ViewNews: FC<ViewNewsProps> = () => {
         currentPage={currentPage}
         handlePaginationChange={handlePaginationChange}
       />
+       {isOpen && <ConfirmationDialog confirmModal={confirmModal} />}
     </div>
   );
 };

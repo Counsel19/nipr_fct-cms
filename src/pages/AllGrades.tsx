@@ -1,12 +1,13 @@
-import EventsTableBody from "@/components/events/EventsTableBody";
+import GradeTableBody from "@/components/grade/GradeTableBody";
 import ConfirmationDialog from "@/components/shared/molecules/ConfirmationDialog";
 import CustomTable from "@/components/shared/molecules/CustomTable";
 import { buttonVariants } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import {
-  deleteEvent,
-  fetchAllEvents,
-} from "@/lib/redux/slices/events/eventsThunk";
+  deleteGrade,
+  fetchAllGrades,
+} from "@/lib/redux/slices/grade/gradeThunk";
+
 import { AppDispatch, RootState } from "@/lib/redux/store";
 import { cn } from "@/lib/utils";
 import { AxiosError } from "axios";
@@ -15,20 +16,20 @@ import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-interface AllEventsProps {}
-const AllEvents: FC<AllEventsProps> = () => {
+interface AllGradesProps {}
+const AllGrades: FC<AllGradesProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [currentPage, setCurrentPage] = useState(1);
   const { isOpen } = useSelector((store: RootState) => store.dialog);
 
-  const { allEvents, singleEvent } = useSelector(
-    (store: RootState) => store.event
+  const { allGrades, singleGrade } = useSelector(
+    (store: RootState) => store.grade
   );
 
   useEffect(() => {
     const getData = () => {
       try {
-        dispatch(fetchAllEvents());
+        dispatch(fetchAllGrades());
       } catch (error) {
         console.log(error);
       }
@@ -43,9 +44,9 @@ const AllEvents: FC<AllEventsProps> = () => {
   };
 
   const confirmModal = async () => {
-    if (!singleEvent) return;
+    if (!singleGrade) return;
     try {
-      const res = await dispatch(deleteEvent(singleEvent.id));
+      const res = await dispatch(deleteGrade(singleGrade.id.toString()));
 
       if (res.type.includes("rejected"))
         return toast({
@@ -54,12 +55,12 @@ const AllEvents: FC<AllEventsProps> = () => {
           variant: "destructive",
         });
 
-      await dispatch(fetchAllEvents());
+      await dispatch(fetchAllGrades());
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 400 || error.response?.status === 401) {
           return toast({
-            title: "Error Deleting Events",
+            title: "Error Deleting Grade",
             description: error.response?.data,
             variant: "destructive",
           });
@@ -67,7 +68,7 @@ const AllEvents: FC<AllEventsProps> = () => {
       }
 
       toast({
-        title: "Error Deleting Events",
+        title: "Error Deleting Grade",
         description: "Something went wrong",
         variant: "destructive",
       });
@@ -79,15 +80,15 @@ const AllEvents: FC<AllEventsProps> = () => {
       <div className="flex justify-between items-center">
         <div />
 
-        <Link to={"/events/new"} className={cn(buttonVariants({}))}>
+        <Link to={"/grade/new"} className={cn(buttonVariants({}))}>
           <Plus />
-          Create Event
+          Create Grade
         </Link>
       </div>
       <CustomTable
-        tableBody={<EventsTableBody />}
-        headingList={eventTableHeading}
-        numberOfPages={allEvents ? allEvents.length : 0}
+        tableBody={<GradeTableBody />}
+        headingList={gradeTableHeading}
+        numberOfPages={allGrades ? allGrades.length : 0}
         currentPage={currentPage}
         handlePaginationChange={handlePaginationChange}
       />
@@ -97,25 +98,18 @@ const AllEvents: FC<AllEventsProps> = () => {
   );
 };
 
-const eventTableHeading = [
+const gradeTableHeading = [
   {
-    text: "Poster Image",
+    text: "Name",
   },
   {
-    text: "Title",
+    text: "Amount",
   },
   {
-    text: "Location",
+    text: "Description",
   },
   {
-    text: "Start ",
-  },
-  {
-    text: "End ",
-  },
-
-  {
-    text: "Type",
+    text: "Created At",
   },
 
   {
@@ -123,22 +117,4 @@ const eventTableHeading = [
   },
 ];
 
-export default AllEvents;
-
-/* 
-
- <div className="flex gap-3 items-center mb-[11px]">
-          <div className="w-full bg-[#F8F8FA] flex items-center gap-[10px] p-2  rounded-lg">
-            <Search className="w-[24px] h-[24px] text-[#9A9AA6]" />
-            <input
-              name="search"
-              placeholder="Search"
-              className="outline-none w-full font-hanken p-3 bg-transparent text-[#8B8B8B] text-[11px]"
-            />
-          </div>
-          <button className="text-[#fff] font-inter text-base w-[102px] h-[40px] bg-[#263238] rounded-lg">
-            Search
-          </button>
-        </div>
-
-*/
+export default AllGrades;

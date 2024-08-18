@@ -74,7 +74,7 @@ export const createGrade = createAppAsyncThunk(
 
 interface IGradeUpdatePayload {
   payload: ICreateGrade,
-  gradeId: number
+  gradeId: string
 }
 
 export const updateGrade = createAppAsyncThunk(

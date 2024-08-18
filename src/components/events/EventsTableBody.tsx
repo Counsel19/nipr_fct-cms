@@ -5,9 +5,11 @@ import { AppDispatch, RootState } from "@/lib/redux/store";
 import CustomLoader from "../shared/atoms/CustomLoader";
 import { IEvent } from "@/types/event";
 import OptsDropdown from "../shared/molecules/OptionsDropdown";
-import { Eye, Pen } from "lucide-react";
+import { Eye, Pen, Trash2, TriangleAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import { openModal } from "@/lib/redux/slices/dialogSlice";
+import { selectEvent } from "@/lib/redux/slices/events/eventsSlice";
 
 interface EventsTableBodyProps {}
 const EventsTableBody: FC<EventsTableBodyProps> = () => {
@@ -44,6 +46,26 @@ const EventsTableBody: FC<EventsTableBodyProps> = () => {
       text: "Edit",
       btnOnclick: function (userId: number) {
         navigate(`${userId}/edit`);
+      },
+    },
+    {
+      id: "3",
+      icon: <Trash2 />,
+      text: "Delete",
+      btnOnclick: function (selectedId: number) {
+        if (!allEvents) return;
+        dispatch(selectEvent(allEvents.find((item) => item.id === selectedId)));
+        dispatch(
+          openModal({
+            icon: <TriangleAlert size={28} className="text-[#374957]" />,
+            iconBg: "bg-[#FEF0C7]",
+            iconBorderColor: "border-[#FFFAEB]",
+            iconColor: "text-[#DC6803]",
+            primaryColor: "bg-[#D83535]",
+            title: "Delete Event",
+            description: "Are you sure you want to Delete this Event?",
+          })
+        );
       },
     },
   ];

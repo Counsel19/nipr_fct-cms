@@ -1,7 +1,7 @@
 export interface IGrade {
   id: number;
   name: string;
-  amount: number;
+  amount: string;
   desc: string;
   created_at: string;
   updated_at: string;

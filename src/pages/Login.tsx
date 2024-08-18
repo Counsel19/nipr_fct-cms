@@ -1,3 +1,4 @@
+import Branding from "@/components/shared/atoms/Branding";
 import LabledInput from "@/components/shared/molecules/LabeledInput";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -49,9 +50,7 @@ const Login: FC<LoginProps> = () => {
         });
       }
 
-      const res = await dispatch(
-        login(inputValue)
-      );
+      const res = await dispatch(login(inputValue));
       if (res.type.includes("rejected"))
         return toast({
           title: "An Error Occurred",
@@ -61,7 +60,6 @@ const Login: FC<LoginProps> = () => {
       toast({
         title: "Login Successful",
         description: "You have logged in successfully",
-        
       });
 
       navigate("/");
@@ -87,16 +85,15 @@ const Login: FC<LoginProps> = () => {
   };
   return (
     <div className="mb-5 bg-[#FAFAFA] h-screen flex flex-col ">
-      <div className="w-full space-y-12 md:w-[480px] mx-auto mt-[5%] my-auto h-[400px] bg-[#fff] shadow rounded-lg border flex flex-col border-solid border-[#E6E7EC]  p-8 ">
+      <div className="w-full space-y-12 md:w-[480px] mx-auto my-auto h-fit bg-[#fff] shadow rounded-lg border flex flex-col border-solid border-[#E6E7EC]  p-8 ">
         <div className="flex flex-col justify-center gap-6 items-center">
+          <Branding />
+          <hr className="h-2 w-full"/>
           <p className="text-xl font-medium text-[#101828]">Welcome back!</p>
           <p className="text-[#828282] text-base">Sign in to access</p>
         </div>
         <div className="h-[300px] mt-5">
-          <form
-            onSubmit={handleLogin}
-            className="flex flex-col gap-10   "
-          >
+          <form onSubmit={handleLogin} className="flex flex-col gap-10   ">
             <LabledInput
               label="Email"
               name="email"

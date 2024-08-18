@@ -1,6 +1,7 @@
 import {
   Banknote,
   CalendarCog,
+  ChartNoAxesGantt,
   CircleCheck,
   Clock8,
   Files,
@@ -100,6 +101,12 @@ const SideBar: FC<SideBarProps> = () => {
       children: false,
       itemId: "/events",
       icon: () => <CalendarCog size={20} />,
+    },
+    {
+      title: "Grade",
+      children: false,
+      itemId: "/grade",
+      icon: () => <ChartNoAxesGantt  size={20} />,
     },
   ];
 

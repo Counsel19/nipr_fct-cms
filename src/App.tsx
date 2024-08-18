@@ -22,6 +22,9 @@ import ViewSinglePost from "./pages/ViewSinglePost";
 import AddNewResource from "./pages/AddNewResource";
 import ViewSingleResource from "./pages/ViewSingleResource";
 import EditSingleResource from "./pages/EditSingleResoure";
+import AllGrades from "./pages/AllGrades";
+import ViewSingleGrade from "./pages/ViewSingleGrade";
+import CreateGrade from "./pages/CreateGrade";
 
 function App() {
   return (
@@ -62,6 +65,12 @@ function App() {
             <Route path="new" element={<CreateEvent />} />
             <Route path=":eventId" element={<ViewEvent />} />
             <Route path=":eventId/edit" element={<EditEvent />} />
+          </Route>
+          <Route path="grade">
+            <Route index element={<AllGrades />} />
+            <Route path="new" element={<CreateGrade />} />
+            <Route path=":gradeId" element={<ViewSingleGrade />} />
+            <Route path=":gradeId/edit" element={<EditEvent />} />
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />
