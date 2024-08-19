@@ -87,7 +87,7 @@ const EventsTableBody: FC<EventsTableBodyProps> = () => {
             className="odd:bg-white even:bg-slate-100 text-base border-b-0"
             key={index}
           >
-            <TableCell className="font-medium">{index + 1}</TableCell>
+            <TableCell className="font-medium text-left">{index + 1}</TableCell>
             <TableCell className="font-medium p-6">
               <img
                 src={
@@ -99,7 +99,7 @@ const EventsTableBody: FC<EventsTableBodyProps> = () => {
                 className="rounded-xl h-[3rem] object-contain"
               />
             </TableCell>
-            <TableCell>{event.title}</TableCell>
+            <TableCell className="text-left">{event.title}</TableCell>
             <TableCell>{event.location}</TableCell>
 
             <TableCell className="">
