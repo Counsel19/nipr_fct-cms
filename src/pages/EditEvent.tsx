@@ -67,7 +67,7 @@ const EditEvent: FC<EditEventProps> = () => {
         type: singleEvent.type,
       });
     }
-  }, []);
+  }, [singleEvent]);
   const handleOnchange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {

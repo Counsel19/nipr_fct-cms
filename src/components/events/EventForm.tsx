@@ -15,6 +15,8 @@ import { EventType } from "@/lib/utils";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
+import { Button } from "../ui/button";
+import { Trash2 } from "lucide-react";
 
 interface EventFormProps {
   setFile?: (file: File) => void;
@@ -36,10 +38,21 @@ const EventForm: FC<EventFormProps> = ({
 }) => {
   return (
     <div className="space-y-12">
-      {setFile ? (
+      {setFile && !input.poster_image ? (
         <FileUpload setFile={setFile} />
       ) : (
-        <img src={input.poster_image as string} alt={input.title} />
+        <div className="border p-4 grid place-content-center">
+          <div className="h-[300px] relative w-fit">
+            <Button className="absolute  p-3 bg-white hover:bg-slate-100 top-10 right-10">
+              <Trash2 className="text-rose-500" />
+            </Button>
+            <img
+              className="object-top object-contain"
+              src={input.poster_image as string}
+              alt={input.title}
+            />
+          </div>
+        </div>
       )}
 
       <LabledInput
@@ -65,8 +78,16 @@ const EventForm: FC<EventFormProps> = ({
         placeholder="Event Location"
       />
       <div className="grid lg:grid-cols-2 gap-6">
-        <DateTimePicker className="text-[1.4rem] h-[50px] rounded-lg" onChange={selectStartDate} value={input.start_date} />
-        <DateTimePicker className="text-[1.4rem] h-[50px] rounded-lg" onChange={selectEndDate} value={input.end_date} />
+        <DateTimePicker
+          className="text-[1.4rem] h-[50px] rounded-lg"
+          onChange={selectStartDate}
+          value={input.start_date}
+        />
+        <DateTimePicker
+          className="text-[1.4rem] h-[50px] rounded-lg"
+          onChange={selectEndDate}
+          value={input.end_date}
+        />
       </div>
       {handleSelectChange ? (
         <div className="space-y-4 flex flex-col items-start">
@@ -76,7 +97,10 @@ const EventForm: FC<EventFormProps> = ({
           >
             Event Type
           </label>
-          <Select onValueChange={(value) => handleSelectChange(value, "type")}>
+          <Select
+            value={input.type as string}
+            onValueChange={(value) => handleSelectChange(value, "type")}
+          >
             <SelectTrigger className="bg-slate-100 focus-visible:ring-0 focus-visible:ring-offset-0 ">
               <SelectValue placeholder="-Select-" />
             </SelectTrigger>
